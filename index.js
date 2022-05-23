@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 const courses = [
     { id: 1, name: 'maths'},
     { id: 2, name: 'french'},
@@ -24,6 +26,17 @@ app.get('/api/courses/:id', (req, res) => {
     if (!course) res.status(404).send('The course with the given id was not found');
     res.send(course);
 })
+
+app.post('/api/courses', (req, res) => {
+    const course = {
+        id: courses.length + 1,
+        name: req.body.name
+    };
+    courses.push(course);
+    res.send(course);
+})
+
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`))
