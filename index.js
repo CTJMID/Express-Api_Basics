@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Joi = require('joi')
 
 app.use(express.json());
 
@@ -28,8 +29,14 @@ app.get('/api/courses/:id', (req, res) => {
 })
 
 app.post('/api/courses', (req, res) => {
-    if (!req.body.name || req.body.name.length < 3) {
-        res.status(400).send('Name is required and should be minimum 4 letters long');
+    const schema = Joi.object({
+        name: Joi.string().min(4).required()
+    });
+    const result = schema.validate(req.body);
+    console.log(result)
+
+    if (!req.body.name || req.body.name.length < 4) {
+        res.status(404).send('Name is required and should be minimum 4 letters long');
         return;
     }
     const course = {
