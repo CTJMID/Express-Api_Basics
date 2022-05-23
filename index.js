@@ -33,10 +33,9 @@ app.post('/api/courses', (req, res) => {
         name: Joi.string().min(4).required()
     });
     const result = schema.validate(req.body);
-    console.log(result)
 
-    if (!req.body.name || req.body.name.length < 4) {
-        res.status(404).send('Name is required and should be minimum 4 letters long');
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
         return;
     }
     const course = {
