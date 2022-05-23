@@ -1,6 +1,11 @@
 const express = require('express');
-const res = require('express/lib/response');
 const app = express();
+
+const courses = [
+    { id: 1, name: 'maths'},
+    { id: 2, name: 'french'},
+    { id: 3, name: 'history'}
+]
 
 app.get('/', (req, res) => {
     res.send('Hello World!!!')
@@ -10,12 +15,14 @@ app.get('/api/courses', (req, res) => {
     res.send([1,2,3]);
 });
 
-app.get('/api/courses/:id', (req,res) => {
-    res.send(req.params.id);
+app.get('/api/courses/:year/:month', (req, res) => {
+    res.send(req.query )
 })
 
-app.get('/api/courses/:year/:month', (req, res) => {
-    res.send(req.params)
+app.get('/api/courses/:id', (req, res) => {
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) res.status(404).send('The course with the given id was not found');
+    res.send(course);
 })
 
 const port = process.env.PORT || 3000;
